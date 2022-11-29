@@ -1,0 +1,16 @@
+[Unit]
+Description=Example systemd service
+After=network.target
+
+[Service]
+ExecStart=/opt/wizard/example_server
+ExecReload=/bin/kill -HUP $MAINPID
+Restart=on-failure
+RestartForceExitStatus=SIGPIPE
+User=wizard
+KillMode=control-group
+CPUShares={{ or .CPUShares "1024" }}
+MemoryLimit={{ or .MemoryLimit "1G" }}
+
+[Install]
+WantedBy=multi-user.target

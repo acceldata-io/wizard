@@ -1,0 +1,82 @@
+{
+  "tasks": {
+    "user": [
+      {
+        "action": "user",
+        "name": "create user wizard",
+        "action_var": {
+          "name": "wizard",
+          "home": "/opt/wizard",
+          "shell": "/bin/sh",
+          "uid": "7331",
+          "gid": "7331",
+          "force": false,
+          "state": "present"
+        },
+        "timeout": 10
+      },
+      {
+        "action": "file",
+        "name": "creating the /opt/wizard dir for the wizard user",
+        "action_var": {
+          "files": [
+            {
+              "dest": "/opt/wizard"
+            }
+          ],
+          "dir": true,
+          "state": "touch",
+          "permission": "0755",
+          "owner": "wizard",
+          "group": "wizard",
+          "force": true
+        },
+        "timeout": 10
+      }
+    ],
+    "service": [
+      {
+        "action": "copy",
+        "name": "copy example_server binary to /opt/wizard",
+        "action_var": {
+          "src_type": "local",
+          "src": "../server/example_server",
+          "dest": "/opt/wizard/example_server",
+          "permission": "0755",
+          "owner": "wizard",
+          "group": "wizard"
+        },
+        "timeout": 10
+      },
+      {
+        "action": "template",
+        "name": "Create example.service file from template",
+        "action_var": {
+          "src_type": "local",
+          "src": "./files/example.service.tmpl",
+          "dest": "/etc/systemd/system/example.service",
+          "permission": "0644",
+          "owner": "wizard",
+          "group": "wizard"
+        },
+        "register": "service",
+        "timeout": 10
+      },
+      {
+        "action": "systemd",
+        "name": "start example systemd service",
+        "when": {
+          "rvar": "service.changed eq true"
+        },
+        "action_var": {
+          "name": "example.service",
+          "state": "start",
+          "force": true,
+          "daemon_reload": true
+        },
+        "timeout": 10
+      }
+    ]
+  },
+  "priority": ["user", "service"]
+}
