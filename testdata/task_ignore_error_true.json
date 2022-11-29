@@ -1,0 +1,17 @@
+{
+  "tasks": {
+    "hydra2": [
+      {
+        "action": "cmd",
+        "name": "this is a cmd",
+        "command": [
+          "ls",
+          "-lha"
+        ],
+        "exit_code": 1,
+        "ignore_error": true
+      }
+    ]
+  },
+  "priority": ["hydra2"]
+}

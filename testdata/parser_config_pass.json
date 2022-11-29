@@ -1,0 +1,124 @@
+{
+  "tasks": {
+    "hydra": [
+      {
+        "action": "copy",
+        "action_var": {
+          "src_type": "embed",
+          "src": "package/preinstall_test.sh",
+          "dest": "/tmp",
+          "permission": "0755",
+          "owner": "root",
+          "group": "root"
+        }
+      },
+      {
+        "action": "copy",
+        "action_var": {
+          "src_type": "embed",
+          "src": "package/postinstall_test.sh",
+          "dest": "/tmp",
+          "permission": "0755",
+          "owner": "root",
+          "group": "root"
+        }
+      },
+      {
+        "action": "copy",
+        "action_var": {
+          "src_type": "disk",
+          "src": "/tmp/postinstall_test.sh",
+          "dest": "/opt/pulse",
+          "permission": "0755",
+          "owner": "root",
+          "group": "root"
+        }
+      },
+      {
+        "action": "cmd",
+        "command": [
+          "sh",
+          "/tmp/preinstall_test.sh"
+        ],
+        "exit_code": 0,
+        "ignore_error": false
+      },
+      {
+        "action": "user",
+        "action_var": {
+          "name": "adpulse",
+          "home": "/opt/pulse",
+          "shell": "/bin/sh",
+          "uid": "996",
+          "gid": "992",
+          "force": false
+        }
+      },
+      {
+        "action": "file",
+        "action_var": {
+          "files": [
+            {
+              "dest": "/opt/pulse/bin"
+            }
+          ],
+          "dir": true,
+          "state": "touch",
+          "permission": "0755",
+          "owner": "adpulse",
+          "group": "adpulse",
+          "force": true
+        }
+      },
+      {
+        "action": "copy",
+        "action_var": {
+          "src_type": "embed",
+          "src": "package/hydra_agent/hydra.rotate",
+          "dest": "/opt/pulse",
+          "permission": "0644",
+          "owner": "root",
+          "group": "root"
+        }
+      },
+      {
+        "action": "file",
+        "action_var": {
+          "files": [
+            {
+              "src": "/opt/pulse/hydra.rotate",
+              "dest": "/etc/systemd/system/hydra.rotate"
+            }
+          ],
+          "dir": false,
+          "state": "link",
+          "permission": "0644",
+          "owner": "root",
+          "group": "root",
+          "force": true
+        }
+      },
+      {
+        "action": "cmd",
+        "command": [
+          "sh",
+          "/tmp/postinstall_test.sh"
+        ],
+        "exit_code": 0
+      }
+    ],
+    "hydra2": [
+      {
+        "action": "cmd",
+        "name": "this is a cmd",
+        "command": [
+          "ls",
+          "-lha"
+        ],
+        "exit_code": 1,
+        "ignore_error": false
+      }
+    ]
+  },
+  "priority": ["hydra","hydra2"]
+}

@@ -1,0 +1,9 @@
+actions:
+  hydra: [
+    {
+      action: "cmd"
+        command: [ "ls", "-lha" ]
+        exit_code: 0
+        ignore_error: false
+    }
+  ]

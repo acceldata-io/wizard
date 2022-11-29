@@ -1,0 +1,30 @@
+{
+  "tasks": {
+    "hydra": [
+      {
+        "action": "copy",
+        "action_var": {
+          "src_type": "embed",
+          "src": "package/preinstall_test.sh",
+          "dest": "/tmp",
+          "permission": "0755",
+          "owner": "root",
+          "group": "root"
+        }
+      }
+    ],
+    "hydra2": [
+      {
+        "action": "cmd",
+        "name": "this is a cmd",
+        "command": [
+          "ls",
+          "-lha"
+        ],
+        "exit_code": 1,
+        "ignore_error": false
+      }
+    ]
+  },
+  "priority": ["hydra","hydra2"]
+}
