@@ -10,6 +10,7 @@ import (
 )
 
 const configFile = "./files/example.json"
+const UninstallConfigFile = "./files/uninstall_example.json"
 
 type templateConfig struct {
 	CPUShares   string
@@ -26,6 +27,13 @@ func main() {
 		os.Exit(1)
 	}
 
+	// uninstall config
+	uninstallConfig, err := os.ReadFile(UninstallConfigFile)
+	if err != nil {
+		fmt.Printf("ERROR: Cannot read the %s file, Reason: %s\n", configFile, err.Error())
+		os.Exit(1)
+	}
+
 	if len(os.Args) == 2 {
 		if os.Args[1] == "chan" {
 			withLogsChan(config)
@@ -35,6 +43,18 @@ func main() {
 			fmt.Println("ERROR: invalid argument. expecting chan or non-chan, got: ", os.Args[1])
 			os.Exit(1)
 		}
+	} else if len(os.Args) == 3 && os.Args[2] == "-u" {
+		if os.Args[1] == "chan" {
+			withLogsChan(uninstallConfig)
+		} else if os.Args[1] == "non-chan" {
+			withoutLogsChan(uninstallConfig)
+		} else {
+			fmt.Println("ERROR: invalid argument. expecting chan or non-chan, got: ", os.Args[1])
+			os.Exit(1)
+		}
+	} else if len(os.Args) == 3 && os.Args[2] != "-u" {
+		fmt.Println("ERROR: invalid arguments: ", os.Args)
+		os.Exit(1)
 	} else if len(os.Args) == 1 {
 		withoutLogsChan(config)
 	} else {
